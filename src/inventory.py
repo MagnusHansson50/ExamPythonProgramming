@@ -8,7 +8,7 @@ class Inventory:
             self.stored_items[item] += quantity
         else:
             self.stored_items[item] = quantity
-        print(f"La {quantity}x {item} till inventory. Total: {self.stored_items[item]}.")
+        print(f"La till {quantity}x {item} till inventory. Total: {self.stored_items[item]}.")
 
     def remove_from_inventory(self, item, quantity=1):
         """Tar bort item från listan om det finns"""

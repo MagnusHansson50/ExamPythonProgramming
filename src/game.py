@@ -11,6 +11,8 @@ inventory = []
 g = Grid()
 g.set_player(player)
 g.make_walls()
+g.make_four_inner_walls()
+#g.make_random_walls_in_game()
 pickups.randomize(g)
 
 # TODO: flytta denna till en annan fil
