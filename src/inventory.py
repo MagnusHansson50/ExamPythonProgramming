@@ -32,3 +32,7 @@ class Inventory:
             print("Inventory är tomt.")
         for item, quantity in self.stored_items.items():
             print(f"{item}: {quantity}")
+
+    def is_in_storage(self, item):
+        """Kollar om en item finns i inventory."""
+        return item in self.stored_items
