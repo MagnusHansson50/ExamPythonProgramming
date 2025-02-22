@@ -41,7 +41,18 @@ class Grid:
                     xs += str(row[x])
             xs += "\n"
         return xs
-
+    # def __str__(self):
+    #     """Gör så att vi kan skriva ut spelplanen med print(grid), med rätt justering"""
+    #     xs = ""
+    #     for y in range(len(self.data)):
+    #         row = self.data[y]
+    #         for x in range(len(row)):
+    #             if x == self.player.pos_x and y == self.player.pos_y:
+    #                 xs += f"@ ".center(2)
+    #             else:
+    #                 xs += f"{str(row[x])} ".center(2)  # Fixar så att alla symboler är två tecken brett
+    #         xs += "\n"  # New line för nästa rad
+    #     return xs
 
     def make_walls(self):
         """Skapa väggar runt hela spelplanen"""

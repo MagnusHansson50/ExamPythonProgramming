@@ -1,7 +1,7 @@
 from .grid import Grid
 from .player import Player
 from . import pickups
-
+from . import traps
 
 
 player = Player(17, 5) #Positionera spelaren mitt på planen
@@ -14,6 +14,7 @@ g.make_walls()
 g.make_four_inner_walls()
 #g.make_random_walls_in_game()
 pickups.randomize(g)
+traps.randomize(g)
 
 # TODO: flytta denna till en annan fil
 def print_status(game_grid):
@@ -53,6 +54,11 @@ while not command.casefold() in ["q", "x"]:
             print(f"You found a {maybe_item.name}, +{maybe_item.value} points.")
             #g.set(player.pos_x, player.pos_y, g.empty)
             g.clear(player.pos_x, player.pos_y)
+
+        if isinstance(maybe_item, traps.Traps):
+            # we found something
+            score -= maybe_item.value
+            print(f"You found a {maybe_item.name}, -{maybe_item.value} points.")
 
 
 # Hit kommer vi när while-loopen slutar
