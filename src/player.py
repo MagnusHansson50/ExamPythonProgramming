@@ -1,9 +1,13 @@
+from src.inventory import Inventory
+
+
 class Player:
     marker = "@"
 
     def __init__(self, x, y):
         self.pos_x = x
         self.pos_y = y
+        self.inventory = Inventory()
 
     # Flyttar spelaren. "dx" och "dy" är skillnaden
     def move(self, dx, dy):

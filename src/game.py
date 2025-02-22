@@ -37,6 +37,8 @@ while not command.casefold() in ["q", "x"]:
         can_move = player.move_up(g) # move up
     elif command == "s":
         can_move = player.move_down(g) # move down
+    elif command == "i":
+        player.inventory.show_inventory()
 
     if can_move:
         score -= 1
@@ -45,6 +47,7 @@ while not command.casefold() in ["q", "x"]:
         if isinstance(maybe_item, pickups.Item):
             # we found something
             score += maybe_item.value
+            player.inventory.add_to_inventory(maybe_item.name)
             print(f"You found a {maybe_item.name}, +{maybe_item.value} points.")
             #g.set(player.pos_x, player.pos_y, g.empty)
             g.clear(player.pos_x, player.pos_y)
