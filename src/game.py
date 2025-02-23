@@ -49,11 +49,19 @@ while not command.casefold() in ["q", "x"]:
 
         if isinstance(maybe_item, pickups.Item):
             # we found something
-            score += maybe_item.value
-            player.inventory.add_to_inventory(maybe_item.name)
-            print(f"You found a {maybe_item.name}, +{maybe_item.value} points.")
-            #g.set(player.pos_x, player.pos_y, g.empty)
-            g.clear(player.pos_x, player.pos_y)
+            if maybe_item.name == "coffin":
+                if player.inventory.is_in_storage("key"):
+                    score += maybe_item.value
+                    player.inventory.add_to_inventory(maybe_item.name)
+                    print(f"You found a {maybe_item.name}, +{maybe_item.value} points.")
+                    g.clear(player.pos_x, player.pos_y)
+                    player.inventory.remove_from_inventory("key", 1)
+            else:
+                score += maybe_item.value
+                player.inventory.add_to_inventory(maybe_item.name)
+                print(f"You found a {maybe_item.name}, +{maybe_item.value} points.")
+                #g.set(player.pos_x, player.pos_y, g.empty)
+                g.clear(player.pos_x, player.pos_y)
 
         if isinstance(maybe_item, traps.Traps):
             # we found something
