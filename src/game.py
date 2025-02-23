@@ -1,4 +1,5 @@
 from .grid import Grid
+from .pickups import randomize_one_item
 from .player import Player
 from . import pickups
 from . import traps
@@ -7,6 +8,7 @@ from . import traps
 player = Player(17, 5) #Positionera spelaren mitt på planen
 score = 0
 inventory = []
+time_for_random_item = 0
 
 g = Grid()
 g.set_player(player)
@@ -26,6 +28,9 @@ def print_status(game_grid):
 command = "a"
 # Loopa tills användaren trycker Q eller X.
 while not command.casefold() in ["q", "x"]:
+    if time_for_random_item >= 25:
+        time_for_random_item = 0
+        randomize_one_item(g)
     print_status(g)
 
     command = input("Use WASD to move, Q/X to quit. ")
@@ -45,6 +50,7 @@ while not command.casefold() in ["q", "x"]:
 
     if can_move:
         score -= 1
+        time_for_random_item += 1
         maybe_item = g.get(player.pos_x, player.pos_y)
 
         if isinstance(maybe_item, pickups.Item):

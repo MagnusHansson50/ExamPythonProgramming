@@ -1,3 +1,5 @@
+import random
+
 
 class Item:
     """Representerar saker man kan plocka upp."""
@@ -23,3 +25,18 @@ def randomize(grid):
                 grid.set(x, y, item)
                 break  # avbryt while-loopen, fortsätt med nästa varv i for-loopen
 
+def randomize_one_item(grid):
+    excluded_items = {"spade", "key", "coffin"} #Skapa en exclude list för att endast få frukt/grönsak
+    filtered_items = [item for item in pickups if item.name not in excluded_items]
+    # Välj en random item ifrån den filtrerade listan
+    random_item = random.choice(filtered_items) if filtered_items else None
+
+    print("Slumpvis vald frukt/grönsak är tillagd:", random_item.name)
+
+    while True:
+        # slumpa en position tills vi hittar en som är ledig
+        x = grid.get_random_x()
+        y = grid.get_random_y()
+        if grid.is_empty(x, y):
+            grid.set(x, y, random_item)
+            break  # avbryt while-loopen, fortsätt med nästa varv i for-loopen
