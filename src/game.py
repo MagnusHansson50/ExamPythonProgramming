@@ -9,6 +9,7 @@ player = Player(17, 5) #Positionera spelaren mitt på planen
 score = 0
 inventory = []
 time_for_random_item = 0
+all_initial_found = False
 
 g = Grid()
 g.set_player(player)
@@ -16,6 +17,7 @@ g.make_walls()
 g.make_four_inner_walls()
 #g.make_random_walls_in_game()
 pickups.randomize(g)
+pickups.add_the_end(g)
 traps.randomize(g)
 
 # TODO: flytta denna till en annan fil
@@ -55,17 +57,24 @@ while not command.casefold() in ["q", "x"]:
 
         if isinstance(maybe_item, pickups.Item):
             # we found something
-            if maybe_item.name == "coffin":
+            if maybe_item.name == "ending":
+                if all_initial_found:
+                    break
+                else:
+                    continue
+            elif maybe_item.name == "coffin":
                 if player.inventory.is_in_storage("key"):
                     score += maybe_item.value
                     player.inventory.add_to_inventory(maybe_item.name)
+                    all_initial_found = player.inventory.remove_from_items_to_pickup_before_end_if_initial(maybe_item)
                     print(f"You found a {maybe_item.name}, +{maybe_item.value} points.")
                     g.clear(player.pos_x, player.pos_y)
                     player.inventory.remove_from_inventory("key", 1)
             else:
                 score += maybe_item.value
                 player.inventory.add_to_inventory(maybe_item.name)
-                print(f"You found a {maybe_item.name}, +{maybe_item.value} points.")
+                all_initial_found = player.inventory.remove_from_items_to_pickup_before_end_if_initial(maybe_item)
+                print(f"You found a {maybe_item.name}, +{maybe_item.value} points. {maybe_item.source}")
                 #g.set(player.pos_x, player.pos_y, g.empty)
                 g.clear(player.pos_x, player.pos_y)
 

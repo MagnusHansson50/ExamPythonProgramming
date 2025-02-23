@@ -1,6 +1,12 @@
+import copy
+from src.pickups import pickups
+
+
 class Inventory:
     def __init__(self):
         self.stored_items = {}  # Dictionary att hålla reda på item och dess antal
+        self.items_to_pickup_before_end = copy.deepcopy(pickups)
+        print(self.items_to_pickup_before_end)
 
     def add_to_inventory(self, item, quantity=1):
         """Lägger till item till listan"""
@@ -22,7 +28,6 @@ class Inventory:
         # Ta bort item om antalet blir 0
         if self.stored_items[item] == 0:
             del self.stored_items[item]
-
         return True
 
     def show_inventory(self):
@@ -36,3 +41,13 @@ class Inventory:
     def is_in_storage(self, item):
         """Kollar om en item finns i inventory."""
         return item in self.stored_items
+
+    def remove_from_items_to_pickup_before_end_if_initial(self, item_to_remove):
+        if item_to_remove.source == "initial":
+            index = next((i for i, item in enumerate(self.items_to_pickup_before_end) if item.name == item_to_remove.name), -1)
+            self.items_to_pickup_before_end.pop(index)
+            length = len(self.items_to_pickup_before_end)
+        if len(self.items_to_pickup_before_end) > 0:
+            return False
+        print("Du har hittat alla ursprungliga objekt och kan avsluta med att ta E")
+        return True
