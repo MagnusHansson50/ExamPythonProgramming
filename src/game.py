@@ -11,6 +11,7 @@ inventory = []
 time_for_random_item = 0
 all_initial_found = False
 jump_two_steps = False
+grace_period = 6
 
 g = Grid()
 g.set_player(player)
@@ -66,7 +67,9 @@ while not command.casefold() in ["q", "x"]:
         jump_two_steps = True
 
     if can_move:
-        score -= 1
+        if grace_period >= 5:
+            score -= 1
+        grace_period += 1
         time_for_random_item += 1
         maybe_item = g.get(player.pos_x, player.pos_y)
 
@@ -80,6 +83,7 @@ while not command.casefold() in ["q", "x"]:
             elif maybe_item.name == "coffin":
                 if player.inventory.is_in_storage("key"):
                     score += maybe_item.value
+                    grace_period = 0
                     player.inventory.add_to_inventory(maybe_item.name)
                     all_initial_found = player.inventory.remove_from_items_to_pickup_before_end_if_initial(maybe_item)
                     print(f"You found a {maybe_item.name}, +{maybe_item.value} points.")
@@ -87,6 +91,7 @@ while not command.casefold() in ["q", "x"]:
                     player.inventory.remove_from_inventory("key", 1)
             else:
                 score += maybe_item.value
+                grace_period = 0
                 player.inventory.add_to_inventory(maybe_item.name)
                 all_initial_found = player.inventory.remove_from_items_to_pickup_before_end_if_initial(maybe_item)
                 print(f"You found a {maybe_item.name}, +{maybe_item.value} points. {maybe_item.source}")
