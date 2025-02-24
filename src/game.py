@@ -10,6 +10,7 @@ score = 0
 inventory = []
 time_for_random_item = 0
 all_initial_found = False
+jump_two_steps = False
 
 g = Grid()
 g.set_player(player)
@@ -41,14 +42,28 @@ while not command.casefold() in ["q", "x"]:
 
     if command == "d":
         can_move = player.move_right(g) # move right
+        if jump_two_steps and can_move:
+            player.move_right(g)  # move right
+            jump_two_steps = False
     elif command == "a":
         can_move = player.move_left(g) # move left
+        if jump_two_steps and can_move:
+            player.move_left(g)  # move left
+            jump_two_steps = False
     elif command == "w":
         can_move = player.move_up(g) # move up
+        if jump_two_steps and can_move:
+            player.move_up(g)  # move up
+            jump_two_steps = False
     elif command == "s":
         can_move = player.move_down(g) # move down
+        if jump_two_steps and can_move:
+            player.move_down(g)  # move down
+            jump_two_steps = False
     elif command == "i":
         player.inventory.show_inventory()
+    elif command == "j":
+        jump_two_steps = True
 
     if can_move:
         score -= 1
