@@ -1,9 +1,11 @@
+import random
+
+from .enemy import Enemy
 from .grid import Grid
 from .pickups import randomize_one_item
 from .player import Player
 from . import pickups
 from . import traps
-
 
 player = Player(17, 5) #Positionera spelaren mitt på planen
 score = 0
@@ -12,6 +14,7 @@ time_for_random_item = 0
 all_initial_found = False
 jump_two_steps = False
 grace_period = 6
+enemy_can_go = 0
 
 g = Grid()
 g.set_player(player)
@@ -21,6 +24,27 @@ g.make_four_inner_walls()
 pickups.randomize(g)
 pickups.add_the_end(g)
 traps.randomize(g)
+
+enemy_one = None
+enemy_two = None
+enemy_three = None
+g.set_enemy_one(enemy_one)
+g.set_enemy_two(enemy_two)
+g.set_enemy_three(enemy_three)
+
+number_of_enemies = random.randint(1, 3)
+if number_of_enemies >= 1:
+    enemy_one = Enemy(1, 1)
+    g.set_enemy_one(enemy_one)
+    enemy_one.randomize(g)
+if number_of_enemies >= 2:
+    enemy_two = Enemy(2, 1)
+    g.set_enemy_two(enemy_two)
+    enemy_two.randomize(g)
+if number_of_enemies == 3:
+    enemy_three = Enemy(3, 1)
+    g.set_enemy_three(enemy_three)
+    enemy_three.randomize(g)
 
 # TODO: flytta denna till en annan fil
 def print_status(game_grid):
@@ -70,6 +94,7 @@ while not command.casefold() in ["q", "x"]:
         if grace_period >= 5:
             score -= 1
         grace_period += 1
+        enemy_can_go += 1
         time_for_random_item += 1
         maybe_item = g.get(player.pos_x, player.pos_y)
 
@@ -78,8 +103,8 @@ while not command.casefold() in ["q", "x"]:
             if maybe_item.name == "ending":
                 if all_initial_found:
                     break
-                else:
-                    continue
+                #else:
+                #   continue
             elif maybe_item.name == "coffin":
                 if player.inventory.is_in_storage("key"):
                     score += maybe_item.value
@@ -97,6 +122,26 @@ while not command.casefold() in ["q", "x"]:
                 print(f"You found a {maybe_item.name}, +{maybe_item.value} points. {maybe_item.source}")
                 #g.set(player.pos_x, player.pos_y, g.empty)
                 g.clear(player.pos_x, player.pos_y)
+        if enemy_can_go > 1:
+            enemy_can_go = 0
+            if number_of_enemies >= 1:
+                if enemy_one.enemy_caught_player(player):
+                    score -= 20
+                enemy_one.move_toward_player(player, g)
+                if enemy_one.enemy_caught_player(player):
+                    score -= 20
+            if number_of_enemies >= 2:
+                if enemy_one.enemy_caught_player(player):
+                    score -= 20
+                enemy_two.move_toward_player(player, g)
+                if enemy_two.enemy_caught_player(player):
+                    score -= 20
+            if number_of_enemies == 3:
+                if enemy_one.enemy_caught_player(player):
+                    score -= 20
+                enemy_three.move_toward_player(player, g)
+                if enemy_three.enemy_caught_player(player):
+                    score -= 20
 
         if isinstance(maybe_item, traps.Traps):
             # we found something

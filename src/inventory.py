@@ -6,7 +6,6 @@ class Inventory:
     def __init__(self):
         self.stored_items = {}  # Dictionary att hålla reda på item och dess antal
         self.items_to_pickup_before_end = copy.deepcopy(pickups)
-        print(self.items_to_pickup_before_end)
 
     def add_to_inventory(self, item, quantity=1):
         """Lägger till item till listan"""

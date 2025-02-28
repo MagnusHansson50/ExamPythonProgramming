@@ -25,6 +25,15 @@ class Grid:
     def set_player(self, player):
         self.player = player
 
+    def set_enemy_one(self, enemy):
+        self.enemy_one = enemy
+
+    def set_enemy_two(self, enemy):
+        self.enemy_two = enemy
+
+    def set_enemy_three(self, enemy):
+        self.enemy_three = enemy
+
     def clear(self, x, y):
         """Ta bort item från position"""
         self.set(x, y, self.empty)
@@ -37,6 +46,12 @@ class Grid:
             for x in range(len(row)):
                 if x == self.player.pos_x and y == self.player.pos_y:
                     xs += "@"
+                elif self.enemy_one is not None and (x == self.enemy_one.pos_x and y == self.enemy_one.pos_y):
+                    xs += "^"
+                elif self.enemy_two is not None and (x == self.enemy_two.pos_x and y == self.enemy_two.pos_y):
+                    xs += "^"
+                elif self.enemy_three is not None and (x == self.enemy_three.pos_x and y == self.enemy_three.pos_y):
+                    xs += "^"
                 else:
                     xs += str(row[x])
             xs += "\n"

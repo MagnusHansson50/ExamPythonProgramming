@@ -56,3 +56,6 @@ class Player:
             self.move(0, 1)
             return True
         return False
+
+    def get_position(self):
+        return self.pos_x, self.pos_y
