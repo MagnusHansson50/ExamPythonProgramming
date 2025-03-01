@@ -22,14 +22,14 @@ def randomize(grid):
         grid.set(x, y, item)
 
 def randomize_one_item(grid):
-    excluded_items = {"spade", "key", "coffin"} #Skapa en exclude lista för att endast få frukt/grönsak
+    excluded_items = {"spade", "coffin"} #Skapa en exclude lista för att endast få frukt/grönsak eller nyckel eftersom vi kan spränga bort nyckel. Och vi behöver en för att öppna kista
     filtered_items = [item for item in pickups if item.name not in excluded_items]
     # Välj en random item ifrån den filtrerade listan
     random_item = random.choice(filtered_items) if filtered_items else None
     copy_of_random_item = copy.deepcopy(random_item) #Gör en kopia av original item för att kunna skilja på ursprungliga item och tillagda
     copy_of_random_item.source = "added" #Sätter added tag för att kunna skilja ifrån initial items
 
-    print("Slumpvis vald frukt/grönsak är tillagd:", random_item.name)
+    print("Added a random chosen item, the following is added:", random_item.name)
 
     while True:
         # slumpa en position tills vi hittar en som är ledig

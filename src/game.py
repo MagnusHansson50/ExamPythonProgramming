@@ -49,14 +49,15 @@ if number_of_enemies == 3:
 
 
 def update_bombs(p, grid):
-    """Updates all bombs and explodes when countdown reaches 0."""
+    """Uppdaterar alla bomber och spränger när countdown är 0."""
     for boom in bombs[:]:  # Kopiera listan för att undvika att den ändras under loopen
         if boom.tick():
             explode_bomb(boom, p, grid)
             bombs.remove(boom)  # Ta bort bomben från listan.
 
 def explode_bomb(boom, p, grid):
-    global score #Inte helt bra med global kanske, men enklaste vägen ut för tillfället.
+    global score # Inte helt bra med global kanske, men enklaste vägen ut för tillfället.
+    global all_initial_found # Inte helt bra med global kanske, men enklaste vägen ut för tillfället.
     """Tar bort allt inom de 8 angränsande rutorna inklusive den som bomben står på"""
     for dx in range(-1, 1 + 1):
         for dy in range(-1, 1 + 1):
@@ -69,6 +70,7 @@ def explode_bomb(boom, p, grid):
             item_is_bomb = False # Variabel för att hålla koll på om det är en annan bomb
             if isinstance(item_at_position, pickups.Item):
                 ending_not_at_position = item_at_position.name != "ending"
+                all_initial_found = p.inventory.remove_from_items_to_pickup_before_end_if_initial(item_at_position)
             if item_at_position == "B" and not ((blow_pos_x, blow_pos_y) == (boom.pos_x, boom.pos_y)):
                 item_is_bomb = True
             if x_ok and y_ok and ending_not_at_position and not item_is_bomb: #Ta inte bort om det är ett ram vägg element, exit eller en annan bomb.
@@ -76,7 +78,7 @@ def explode_bomb(boom, p, grid):
             if (p.pos_x, p.pos_y) ==  (boom.pos_x + dx, boom.pos_y + dy):
                 print("Räkna ner")
                 score -= 50
-    print(f"💥 Bomb exploderade 💥 ({boom.pos_x}, {boom.pos_y})!")
+    print(f"💥 Bomb exploded 💥 ({boom.pos_x}, {boom.pos_y})!")
 
 # TODO: flytta denna till en annan fil
 def print_status(game_grid):
@@ -124,6 +126,11 @@ while not command.casefold() in ["q", "x"]:
     elif command == "b":
         bomb = Bomb(player.pos_x, player.pos_y, g)
         bombs.append(bomb)
+    elif command == "t":
+        maybe_trap = g.get(player.pos_x, player.pos_y)
+        if isinstance(maybe_trap, traps.Traps):
+            g.clear(player.pos_x, player.pos_y)
+            print("You disarmed a trap!!!")
 
     if can_move:
         if grace_period >= 5:
@@ -182,8 +189,8 @@ while not command.casefold() in ["q", "x"]:
         if isinstance(maybe_item, traps.Traps):
             # we found something
             score -= maybe_item.value
-            print(f"You found a {maybe_item.name}, -{maybe_item.value} points.")
+            print(f"⚠️ You entered a {maybe_item.name}, -{maybe_item.value} points. ⚠️")
 
 
 # Hit kommer vi när while-loopen slutar
-print("Thank you for playing!")
+print(f"Thank you for playing! Your score is: {score}")

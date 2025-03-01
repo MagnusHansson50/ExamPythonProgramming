@@ -1,6 +1,6 @@
 class Traps:
     """Representerar saker man kan plocka upp."""
-    def __init__(self, name, value=10, symbol="X"):
+    def __init__(self, name, value=10, symbol="."):
         self.name = name
         self.value = value
         self.symbol = symbol
@@ -9,7 +9,7 @@ class Traps:
         return self.symbol
 
 
-traps = [Traps("skull"), Traps("skull"), Traps("skull")]
+traps = [Traps("trap"), Traps("trap"), Traps("trap")]
 
 
 def randomize(grid):

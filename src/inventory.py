@@ -13,16 +13,16 @@ class Inventory:
             self.stored_items[item] += quantity
         else:
             self.stored_items[item] = quantity
-        print(f"La till {quantity}x {item} till inventory. Total: {self.stored_items[item]}.")
+        print(f"Added {quantity}x {item} to the inventory. Total: {self.stored_items[item]}.")
 
     def remove_from_inventory(self, item, quantity=1):
         """Tar bort item från listan om det finns"""
         if item not in self.stored_items or self.stored_items[item] < quantity:
-            print(f"Inte tillräckligt med {item} i inventory.")
+            print(f"Not enough {item} in inventory.")
             return False
 
         self.stored_items[item] -= quantity
-        print(f"Tog bort {quantity}x {item} från inventory. Kvarvarande: {self.stored_items[item]}.")
+        print(f"Removed {quantity}x {item} from inventory. Remaining: {self.stored_items[item]}.")
 
         # Ta bort item om antalet blir 0
         if self.stored_items[item] == 0:
@@ -33,7 +33,7 @@ class Inventory:
         """Printar ut inventory"""
         print("\nInventory:")
         if not self.stored_items:
-            print("Inventory är tomt.")
+            print("Inventory is empty.")
         for item, quantity in self.stored_items.items():
             print(f"{item}: {quantity}")
 
@@ -48,5 +48,5 @@ class Inventory:
             length = len(self.items_to_pickup_before_end)
         if len(self.items_to_pickup_before_end) > 0:
             return False
-        print("Du har hittat alla ursprungliga objekt och kan avsluta med att ta E")
+        print("You have found all initial objects and can exit on E")
         return True
