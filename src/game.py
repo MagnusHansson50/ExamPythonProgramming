@@ -2,6 +2,7 @@ import random
 
 from .bomb import Bomb
 from .enemy import Enemy
+from .functions import print_status, print_help, print_story
 from .grid import Grid
 from .pickups import randomize_one_item
 from .player import Player
@@ -80,22 +81,15 @@ def explode_bomb(boom, p, grid):
                 score -= 50
     print(f"💥 Bomb exploded 💥 ({boom.pos_x}, {boom.pos_y})!")
 
-# TODO: flytta denna till en annan fil
-def print_status(game_grid):
-    """Visa spelvärlden och antal poäng."""
-    print("--------------------------------------")
-    print(f"You have {score} points.")
-    print(game_grid)
-
 command = "a"
 # Loopa tills användaren trycker Q eller X.
 while not command.casefold() in ["q", "x"]:
     if time_for_random_item >= 25:
         time_for_random_item = 0
         randomize_one_item(g)
-    print_status(g)
+    print_status(g, score)
 
-    command = input("Use WASD to move, Q/X to quit. ")
+    command = input("Use WASD to move, Q/X to quit. H for help.")
     command = command.casefold()[:1]
     can_move = False
 
@@ -131,6 +125,10 @@ while not command.casefold() in ["q", "x"]:
         if isinstance(maybe_trap, traps.Traps):
             g.clear(player.pos_x, player.pos_y)
             print("You disarmed a trap!!!")
+    elif command == "h":
+        print_help()
+    elif command == "p":
+        print_story()
 
     if can_move:
         if grace_period >= 5:

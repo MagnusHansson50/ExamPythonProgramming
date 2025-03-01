@@ -13,7 +13,7 @@ class Item:
         return self.symbol
 
 
-pickups = [Item("carrot"), Item("apple", 20), Item("strawberry", 20), Item("cherry", 20), Item("watermelon"), Item("radish"), Item("cucumber"), Item("meatball"), Item("spade", 0, "S"), Item("key", 0, "k"), Item("key", 0, "k"), Item("coffin", 100, "C"), Item("coffin", 100, "C")]
+pickups = [Item("carrot"), Item("apple", 20), Item("strawberry", 20), Item("cherry", 20), Item("watermelon"), Item("radish"), Item("cucumber"), Item("meatball"), Item("shovel", 0, "S"), Item("key", 0, "k"), Item("key", 0, "k"), Item("coffin", 100, "C"), Item("coffin", 100, "C")]
 
 
 def randomize(grid):
