@@ -9,15 +9,10 @@ class Traps:
         return self.symbol
 
 
-traps = [Traps("skull")]
+traps = [Traps("skull"), Traps("skull"), Traps("skull")]
 
 
 def randomize(grid):
     for trap in traps:
-        while True:
-            # slumpa en position tills vi hittar en som är ledig
-            x = grid.get_random_x()
-            y = grid.get_random_y()
-            if grid.is_empty(x, y):
-                grid.set(x, y, trap)
-                break  # avbryt while-loopen, fortsätt med nästa varv i for-loopen
+        x, y = grid.randomize_empty_position_in_grid()
+        grid.set(x, y, trap)

@@ -1,5 +1,6 @@
 import random
 
+from .bomb import Bomb
 from .enemy import Enemy
 from .grid import Grid
 from .pickups import randomize_one_item
@@ -9,12 +10,12 @@ from . import traps
 
 player = Player(17, 5) #Positionera spelaren mitt på planen
 score = 0
-inventory = []
 time_for_random_item = 0
 all_initial_found = False
 jump_two_steps = False
 grace_period = 6
 enemy_can_go = 0
+bombs = []
 
 g = Grid()
 g.set_player(player)
@@ -34,17 +35,48 @@ g.set_enemy_three(enemy_three)
 
 number_of_enemies = random.randint(1, 3)
 if number_of_enemies >= 1:
-    enemy_one = Enemy(1, 1)
+    x, y = g.randomize_empty_position_in_grid()
+    enemy_one = Enemy(x, y)
     g.set_enemy_one(enemy_one)
-    enemy_one.randomize(g)
 if number_of_enemies >= 2:
-    enemy_two = Enemy(2, 1)
+    x, y = g.randomize_empty_position_in_grid()
+    enemy_two = Enemy(x, y)
     g.set_enemy_two(enemy_two)
-    enemy_two.randomize(g)
 if number_of_enemies == 3:
-    enemy_three = Enemy(3, 1)
+    x, y = g.randomize_empty_position_in_grid()
+    enemy_three = Enemy(x, y)
     g.set_enemy_three(enemy_three)
-    enemy_three.randomize(g)
+
+
+def update_bombs(p, grid):
+    """Updates all bombs and explodes when countdown reaches 0."""
+    for boom in bombs[:]:  # Kopiera listan för att undvika att den ändras under loopen
+        if boom.tick():
+            explode_bomb(boom, p, grid)
+            bombs.remove(boom)  # Ta bort bomben från listan.
+
+def explode_bomb(boom, p, grid):
+    global score #Inte helt bra med global kanske, men enklaste vägen ut för tillfället.
+    """Tar bort allt inom de 8 angränsande rutorna inklusive den som bomben står på"""
+    for dx in range(-1, 1 + 1):
+        for dy in range(-1, 1 + 1):
+            blow_pos_x = (boom.pos_x + dx)
+            blow_pos_y = (boom.pos_y + dy)
+            x_ok = (blow_pos_x != 0) and (blow_pos_x != (grid.width -1)) # Variabel för att kolla att vi inte spränger ramen
+            y_ok = (blow_pos_y != 0) and (blow_pos_y != (grid.height - 1)) # Variabel för att kolla att vi inte spränger ramen
+            item_at_position = grid.get(blow_pos_x, blow_pos_y)
+            ending_not_at_position = True # Variabel för att kolla att vi inte spränger Exit
+            item_is_bomb = False # Variabel för att hålla koll på om det är en annan bomb
+            if isinstance(item_at_position, pickups.Item):
+                ending_not_at_position = item_at_position.name != "ending"
+            if item_at_position == "B" and not ((blow_pos_x, blow_pos_y) == (boom.pos_x, boom.pos_y)):
+                item_is_bomb = True
+            if x_ok and y_ok and ending_not_at_position and not item_is_bomb: #Ta inte bort om det är ett ram vägg element, exit eller en annan bomb.
+                grid.clear(blow_pos_x, blow_pos_y)
+            if (p.pos_x, p.pos_y) ==  (boom.pos_x + dx, boom.pos_y + dy):
+                print("Räkna ner")
+                score -= 50
+    print(f"💥 Bomb exploderade 💥 ({boom.pos_x}, {boom.pos_y})!")
 
 # TODO: flytta denna till en annan fil
 def print_status(game_grid):
@@ -89,6 +121,9 @@ while not command.casefold() in ["q", "x"]:
         player.inventory.show_inventory()
     elif command == "j":
         jump_two_steps = True
+    elif command == "b":
+        bomb = Bomb(player.pos_x, player.pos_y, g)
+        bombs.append(bomb)
 
     if can_move:
         if grace_period >= 5:
@@ -96,6 +131,7 @@ while not command.casefold() in ["q", "x"]:
         grace_period += 1
         enemy_can_go += 1
         time_for_random_item += 1
+        update_bombs(player, g)
         maybe_item = g.get(player.pos_x, player.pos_y)
 
         if isinstance(maybe_item, pickups.Item):

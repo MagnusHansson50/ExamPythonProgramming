@@ -13,18 +13,13 @@ class Item:
         return self.symbol
 
 
-pickups = [Item("carrot"), Item("apple", 20, ""), Item("strawberry", 20, "s"), Item("cherry", 20, "c"), Item("watermelon"), Item("radish"), Item("cucumber"), Item("meatball"), Item("spade", 0, "S"), Item("key", 0, "k"), Item("key", 0, "k"), Item("coffin", 100, "C"), Item("coffin", 100, "C")]
+pickups = [Item("carrot"), Item("apple", 20), Item("strawberry", 20), Item("cherry", 20), Item("watermelon"), Item("radish"), Item("cucumber"), Item("meatball"), Item("spade", 0, "S"), Item("key", 0, "k"), Item("key", 0, "k"), Item("coffin", 100, "C"), Item("coffin", 100, "C")]
 
 
 def randomize(grid):
     for item in pickups:
-        while True:
-            # slumpa en position tills vi hittar en som är ledig
-            x = grid.get_random_x()
-            y = grid.get_random_y()
-            if grid.is_empty(x, y):
-                grid.set(x, y, item)
-                break  # avbryt while-loopen, fortsätt med nästa varv i for-loopen
+        x, y = grid.randomize_empty_position_in_grid()
+        grid.set(x, y, item)
 
 def randomize_one_item(grid):
     excluded_items = {"spade", "key", "coffin"} #Skapa en exclude lista för att endast få frukt/grönsak

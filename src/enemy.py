@@ -45,13 +45,3 @@ class Enemy(Player):
     def enemy_caught_player(self, player):
         return (self.pos_x, self.pos_y) == (player.pos_x, player.pos_y)
 
-
-    def randomize(self, grid):
-        while True:
-            # slumpa en position tills vi hittar en som är ledig
-            x = grid.get_random_x()
-            y = grid.get_random_y()
-            if grid.is_empty(x, y):
-                self.move(x, y)
-            break  # avbryt while-loopen
-

@@ -90,9 +90,9 @@ class Grid:
         # sätt vägg blocken
         for x, y, length, vertical in walls:
             for i in range(length):
-                if vertical and (y+i) < self.height: # Kolla att vi är inom ramen
+                if vertical and (y+i) < (self.height - 2): # Kolla att vi är inom ramen
                     self.set(x, (y+i), self.wall)
-                elif not vertical and (x+i) < self.width: # Kolla att vi är inom ramen
+                elif not vertical and (x+i) < (self.width - 2): # Kolla att vi är inom ramen
                     self.set((x+i), y, self.wall)
 
     def make_random_walls_in_game(self, wall_chance=0.2):
@@ -105,13 +105,25 @@ class Grid:
     # Används i filen pickups.py
     def get_random_x(self):
         """Slumpa en x-position på spelplanen"""
-        return random.randint(0, self.width-1)
+        return random.randint(0, self.width-2) #Ändrat till minus två för att inte komma i ramen
 
     def get_random_y(self):
         """Slumpa en y-position på spelplanen"""
-        return random.randint(0, self.height-1)
+        return random.randint(0, self.height-2) #Ändrat till minus två för att inte komma i ramen
 
 
     def is_empty(self, x, y):
         """Returnerar True om det inte finns något på aktuell ruta"""
         return self.get(x, y) == self.empty
+
+    def randomize_empty_position_in_grid(self, max_attempts=1000):
+        if max_attempts < (self.width * self.height):
+            max_attempts = (self.width * self.height) + 1000
+        for _ in range(max_attempts):
+            # slumpa en position tills vi hittar en som är ledig eller raise an exception if we do not get any
+            x = self.get_random_x()
+            y = self.get_random_y()
+            if self.is_empty(x, y):
+                return x, y
+        raise RuntimeError("Major failure no empty position in grid!!!")
+
