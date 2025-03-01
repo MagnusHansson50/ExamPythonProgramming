@@ -13,6 +13,8 @@ def print_help():
     print("j before a move makes it jump two steps")
     print("b places a bomb, will explode after 3 moves")
     print("t disarms a trap, in case you are on a trap")
+    print("h for help")
+    print("p for print story")
 
 def print_story():
     print("The player can move one step at the time, unless j is entered before than the player jumps two steps. It is not possible to walk through walls\n"
