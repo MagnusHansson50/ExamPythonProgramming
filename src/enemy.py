@@ -22,6 +22,7 @@ class Enemy(Player):
         # Sortera så vi får bästa draget först
         moves.sort(key=lambda move: abs((self.pos_x + move[0]) - player.pos_x) + abs((self.pos_y + move[1]) - player.pos_y))
         #Prova bästa draget och ta bort det om det inte fungerar
+        print(f"moves: {moves}")
         best_moves = [moves.pop(0), moves.pop(0)]
         second_last_move = self.previous_moves.pop(0)
         #random.shuffle(best_moves)

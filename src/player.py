@@ -7,6 +7,8 @@ class Player:
     def __init__(self, x, y):
         self.pos_x = x
         self.pos_y = y
+        self.score = 0
+        self.all_initial_found = False
         self.inventory = Inventory()
 
     # Flyttar spelaren. "dx" och "dy" är skillnaden
@@ -25,8 +27,8 @@ class Player:
             return False #Returnera False om spelaren provar att gå utanför spelplanen. Förhindrar också att vi kan använda spaden på ytterväggarna.
         else:
             if maybe_wall == "■": #Kollar om det finns ett väggtecken i vägen.
-                if self.inventory.is_in_storage("spade"):
-                    self.inventory.remove_from_inventory("spade", 1) #Ta bort en spade ur inventory eftersom vi kommer använda den på nästa rad.
+                if self.inventory.is_in_storage("shovel"):
+                    self.inventory.remove_from_inventory("shovel", 1) #Ta bort en spade ur inventory eftersom vi kommer använda den på nästa rad.
                     grid.clear(new_x, new_y) #Ta bort väggelement.
                     return True #Returnera True eftersom vi har kunnat ta bort väggelementet med spaden.
                 else:
