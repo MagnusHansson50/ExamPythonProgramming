@@ -15,6 +15,7 @@ jump_two_steps = False
 grace_period = 6
 enemy_can_go = 0
 bombs = []
+enemies = []
 
 g = Grid()
 g.set_player(player)
@@ -25,26 +26,11 @@ pickups.randomize(g)
 pickups.add_the_end(g)
 traps.randomize(g)
 
-enemy_one = None
-enemy_two = None
-enemy_three = None
-g.set_enemy_one(enemy_one)
-g.set_enemy_two(enemy_two)
-g.set_enemy_three(enemy_three)
-
 number_of_enemies = random.randint(1, 3)
-if number_of_enemies >= 1:
+for i in range(number_of_enemies):
     x, y = g.randomize_empty_position_in_grid()
-    enemy_one = Enemy(x, y)
-    g.set_enemy_one(enemy_one)
-if number_of_enemies >= 2:
-    x, y = g.randomize_empty_position_in_grid()
-    enemy_two = Enemy(x, y)
-    g.set_enemy_two(enemy_two)
-if number_of_enemies == 3:
-    x, y = g.randomize_empty_position_in_grid()
-    enemy_three = Enemy(x, y)
-    g.set_enemy_three(enemy_three)
+    enemies.append(Enemy(x, y))
+    g.set_enemies(enemies)
 
 command = "a"
 # Loopa tills användaren trycker Q eller X.
@@ -101,7 +87,7 @@ while not command.casefold() in ["q", "x"]:
         grace_period += 1
         enemy_can_go += 1
         time_for_random_item += 1
-        update_bombs(player, g, bombs)
+        update_bombs(player, g, bombs, enemies)
         maybe_item = g.get(player.pos_x, player.pos_y)
 
         if isinstance(maybe_item, pickups.Item):
@@ -130,24 +116,13 @@ while not command.casefold() in ["q", "x"]:
                 g.clear(player.pos_x, player.pos_y)
         if enemy_can_go > 1:
             enemy_can_go = 0
-            if number_of_enemies >= 1:
-                if enemy_one.enemy_caught_player(player):
+            for i in range(len(enemies)):
+                if enemies[i].enemy_caught_player(player):
                     player.score -= 20
-                enemy_one.move_toward_player(player, g)
-                if enemy_one.enemy_caught_player(player):
+                enemies[i].move_toward_player(player, g)
+                if enemies[i].enemy_caught_player(player):
                     player.score -= 20
-            if number_of_enemies >= 2:
-                if enemy_one.enemy_caught_player(player):
-                    player.score -= 20
-                enemy_two.move_toward_player(player, g)
-                if enemy_two.enemy_caught_player(player):
-                    player.score -= 20
-            if number_of_enemies == 3:
-                if enemy_one.enemy_caught_player(player):
-                    player.score -= 20
-                enemy_three.move_toward_player(player, g)
-                if enemy_three.enemy_caught_player(player):
-                    player.score -= 20
+
 
         if isinstance(maybe_item, traps.Traps):
             # we found something

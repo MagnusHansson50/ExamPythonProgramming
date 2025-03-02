@@ -25,14 +25,8 @@ class Grid:
     def set_player(self, player):
         self.player = player
 
-    def set_enemy_one(self, enemy):
-        self.enemy_one = enemy
-
-    def set_enemy_two(self, enemy):
-        self.enemy_two = enemy
-
-    def set_enemy_three(self, enemy):
-        self.enemy_three = enemy
+    def set_enemies(self, enemies):
+        self.enemies = enemies
 
     def clear(self, x, y):
         """Ta bort item från position"""
@@ -46,11 +40,11 @@ class Grid:
             for x in range(len(row)):
                 if x == self.player.pos_x and y == self.player.pos_y:
                     xs += "@"
-                elif self.enemy_one is not None and (x == self.enemy_one.pos_x and y == self.enemy_one.pos_y):
+                elif len(self.enemies) >= 1 and (x == self.enemies[0].pos_x and y == self.enemies[0].pos_y):
                     xs += "^"
-                elif self.enemy_two is not None and (x == self.enemy_two.pos_x and y == self.enemy_two.pos_y):
+                elif len(self.enemies) >= 2 and (x == self.enemies[1].pos_x and y == self.enemies[1].pos_y):
                     xs += "^"
-                elif self.enemy_three is not None and (x == self.enemy_three.pos_x and y == self.enemy_three.pos_y):
+                elif len(self.enemies) == 3 and (x == self.enemies[2].pos_x and y == self.enemies[2].pos_y):
                     xs += "^"
                 else:
                     xs += str(row[x])
@@ -82,7 +76,7 @@ class Grid:
     def make_four_inner_walls(self):
         # Definiera fyra väggar
         walls = [
-            (5, 3, 6, True),  # Vertikal vägg (x=5, from y=3 to y=10)
+            (5, 3, 6, True),  # Vertikal vägg (x=5, from y=3 to y=9)
             (15, 2, 6, True),  # Vertikal vägg (x=15, from y=2 to y=8)
             (20, 6, 12, False),  # Horisontell vägg (y=6, from x=20 to x=32)
             (8, 9, 20, False)  # Horisontell vägg (y=9, from x=8 to x=28)

@@ -25,16 +25,16 @@ class Bomb:
         return self.countdown <= 0
 
 
-def update_bombs(p, grid, bombs):
+def update_bombs(p, grid, bombs, enemies):
     """Uppdaterar alla bomber och spränger när countdown är 0."""
     for boom in bombs[:]:  # Kopiera listan för att undvika att den ändras under loopen
         if boom.tick():
-            explode_bomb(boom, p, grid)
+            explode_bomb(boom, p, grid, enemies)
             bombs.remove(boom)  # Ta bort bomben från listan.
 
 
 
-def explode_bomb(boom, p, grid):
+def explode_bomb(boom, p, grid, enemies):
     """Tar bort allt inom de 8 angränsande rutorna inklusive den som bomben står på"""
     for dx in range(-1, 1 + 1):
         for dy in range(-1, 1 + 1):
@@ -52,8 +52,11 @@ def explode_bomb(boom, p, grid):
                 item_is_bomb = True
             if x_ok and y_ok and ending_not_at_position and not item_is_bomb: #Ta inte bort om det är ett ram vägg element, exit eller en annan bomb.
                 grid.clear(blow_pos_x, blow_pos_y)
-            if (p.pos_x, p.pos_y) ==  (boom.pos_x + dx, boom.pos_y + dy):
+            if (p.pos_x, p.pos_y) ==  (blow_pos_x, blow_pos_y):
                 p.score -= 50
+            for enemy in enemies[:]:
+                if (enemy.pos_x, enemy.pos_y) == (blow_pos_x, blow_pos_y):
+                    enemies.remove(enemy)
             if boom.original_item:
                 grid.set(boom.pos_x, boom.pos_y, boom.original_item)
     print(f"💥 Bomb exploded 💥 ({boom.pos_x}, {boom.pos_y})!")
