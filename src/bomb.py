@@ -36,6 +36,8 @@ def update_bombs(p, grid, bombs, enemies):
 
 def explode_bomb(boom, p, grid, enemies):
     """Tar bort allt inom de 8 angränsande rutorna inklusive den som bomben står på"""
+    """Exkluderar Exit så att vi kan avsluta spelet. Minskar även score om spelare är inom explosionsområdet"""
+    """Exkluderar även andra bomber"""
     for dx in range(-1, 1 + 1):
         for dy in range(-1, 1 + 1):
             blow_pos_x = (boom.pos_x + dx)

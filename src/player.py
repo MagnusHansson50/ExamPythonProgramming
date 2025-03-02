@@ -8,7 +8,7 @@ class Player:
         self.pos_x = x
         self.pos_y = y
         self.score = 0
-        self.all_initial_found = False
+        self.all_initial_found = False # Variabel för att hålla koll på om vi samlat alla initiala element
         self.inventory = Inventory()
 
     # Flyttar spelaren. "dx" och "dy" är skillnaden
@@ -20,6 +20,7 @@ class Player:
         self.pos_y += dy
 
     def can_move(self, x, y, grid):
+        """Kolla om det finns möjlighet att flytta sig. Returnerar True eller False"""
         new_x = self.pos_x + x
         new_y = self.pos_y + y
         maybe_wall = grid.get(new_x, new_y)
@@ -58,6 +59,3 @@ class Player:
             self.move(0, 1)
             return True
         return False
-
-    def get_position(self):
-        return self.pos_x, self.pos_y

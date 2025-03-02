@@ -5,7 +5,7 @@ from src.pickups import pickups
 class Inventory:
     def __init__(self):
         self.stored_items = {}  # Dictionary att hålla reda på item och dess antal
-        self.items_to_pickup_before_end = copy.deepcopy(pickups)
+        self.items_to_pickup_before_end = copy.deepcopy(pickups) # Skapar en kopia på alla initiala Items som vi ska samla på innan vi kan gå till Exit
 
     def add_to_inventory(self, item, quantity=1):
         """Lägger till item till listan"""

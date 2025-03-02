@@ -111,8 +111,9 @@ class Grid:
         return self.get(x, y) == self.empty
 
     def randomize_empty_position_in_grid(self, max_attempts=1000):
+        """Returnerar x, y för en ledig position, annars Exception"""
         if max_attempts < (self.width * self.height):
-            max_attempts = (self.width * self.height) + 1000
+           max_attempts = (self.width * self.height) + 1000
         for _ in range(max_attempts):
             # slumpa en position tills vi hittar en som är ledig eller raise an exception if we do not get any
             x = self.get_random_x()

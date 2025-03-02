@@ -1,5 +1,7 @@
 import copy
 import random
+import sys
+
 
 class Item:
     """Representerar saker man kan plocka upp."""
@@ -17,11 +19,18 @@ pickups = [Item("carrot"), Item("apple", 20), Item("strawberry", 20), Item("cher
 
 
 def randomize(grid):
+    """Placerar ut alla Items i pickups på random position"""
     for item in pickups:
-        x, y = grid.randomize_empty_position_in_grid()
-        grid.set(x, y, item)
+        try:
+            x, y = grid.randomize_empty_position_in_grid()
+        except RuntimeError as e:
+            print(f"Critical error: {e}")
+            sys.exit(1)  # Lämnar programmet med en felkod
+        else:
+            grid.set(x, y, item)
 
 def randomize_one_item(grid):
+    """Slumpar ut en item på spelplanen"""
     excluded_items = {"spade", "coffin"} #Skapa en exclude lista för att endast få frukt/grönsak eller nyckel eftersom vi kan spränga bort nyckel. Och vi behöver en för att öppna kista
     filtered_items = [item for item in pickups if item.name not in excluded_items]
     # Välj en random item ifrån den filtrerade listan
@@ -30,21 +39,23 @@ def randomize_one_item(grid):
     copy_of_random_item.source = "added" #Sätter added tag för att kunna skilja ifrån initial items
 
     print("Added a random chosen item, the following is added:", random_item.name)
-
-    while True:
-        # slumpa en position tills vi hittar en som är ledig
-        x = grid.get_random_x()
-        y = grid.get_random_y()
-        if grid.is_empty(x, y):
-            grid.set(x, y, copy_of_random_item)
-            break  # avbryt while-loopen, fortsätt med nästa varv i for-loopen
+    # Slumpar en position tills vi hittar en som är ledig
+    try:
+        x, y = grid.randomize_empty_position_in_grid()
+    except RuntimeError as e:
+        print(f"Critical error: {e}")
+        sys.exit(1)  # Lämnar programmet med en felkod
+    else:
+        grid.set(x, y, copy_of_random_item)
 
 def add_the_end(grid):
+    """Slumpar ut en Exit på spelplanen"""
     ending = Item("ending", 0, "E", "The End")
-    while True:
-        # slumpa en position tills vi hittar en som är ledig
-        x = grid.get_random_x()
-        y = grid.get_random_y()
-        if grid.is_empty(x, y):
-            grid.set(x, y, ending)
-            break  # avbryt while-loopen
+    # slumpa en position tills vi hittar en som är ledig
+    try:
+        x, y = grid.randomize_empty_position_in_grid()
+    except RuntimeError as e:
+        print(f"Critical error: {e}")
+        sys.exit(1)  # Lämnar programmet med en felkod
+    else:
+        grid.set(x, y, ending)

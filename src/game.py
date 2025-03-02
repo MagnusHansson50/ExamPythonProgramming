@@ -1,4 +1,5 @@
 import random
+import sys
 
 from .bomb import Bomb, update_bombs
 from .enemy import Enemy
@@ -28,9 +29,14 @@ traps.randomize(g)
 
 number_of_enemies = random.randint(1, 3)
 for i in range(number_of_enemies):
-    x, y = g.randomize_empty_position_in_grid()
-    enemies.append(Enemy(x, y))
-    g.set_enemies(enemies)
+    try:
+        x, y = g.randomize_empty_position_in_grid()
+    except RuntimeError as e:
+        print(f"Critical error: {e}")
+        sys.exit(1) # Lämnar programmet med en felkod
+    else:
+        enemies.append(Enemy(x, y))
+        g.set_enemies(enemies)
 
 command = "a"
 # Loopa tills användaren trycker Q eller X.
@@ -65,11 +71,11 @@ while not command.casefold() in ["q", "x"]:
             player.move_down(g)  # move down
             jump_two_steps = False
     elif command == "i":
-        player.inventory.show_inventory()
+        player.inventory.show_inventory() # Visa inventory
     elif command == "j":
         jump_two_steps = True
     elif command == "b":
-        bomb = Bomb(player.pos_x, player.pos_y, g)
+        bomb = Bomb(player.pos_x, player.pos_y, g) # Placera en bomb på spelarens position
         bombs.append(bomb)
     elif command == "t":
         maybe_trap = g.get(player.pos_x, player.pos_y)
@@ -92,13 +98,11 @@ while not command.casefold() in ["q", "x"]:
 
         if isinstance(maybe_item, pickups.Item):
             # we found something
-            if maybe_item.name == "ending":
+            if maybe_item.name == "ending": # Kollar om det är ett Exit item
                 if player.all_initial_found:
                     break
-                #else:
-                #   continue
-            elif maybe_item.name == "coffin":
-                if player.inventory.is_in_storage("key"):
+            elif maybe_item.name == "coffin": # Kollar om det är en kista
+                if player.inventory.is_in_storage("key"): # Kollar om vi har en nyckel i inventory att öppna kistan med
                     player.score += maybe_item.value
                     grace_period = 0
                     player.inventory.add_to_inventory(maybe_item.name)
@@ -116,7 +120,7 @@ while not command.casefold() in ["q", "x"]:
                 g.clear(player.pos_x, player.pos_y)
         if enemy_can_go > 1:
             enemy_can_go = 0
-            for i in range(len(enemies)):
+            for i in range(len(enemies)): # Gå igenom alla fiender för att som om spelaren flyttat till en fiende och om en fiende lyckas fånga en spelare
                 if enemies[i].enemy_caught_player(player):
                     player.score -= 20
                 enemies[i].move_toward_player(player, g)
@@ -124,7 +128,7 @@ while not command.casefold() in ["q", "x"]:
                     player.score -= 20
 
 
-        if isinstance(maybe_item, traps.Traps):
+        if isinstance(maybe_item, traps.Traps): # Kolla om vi ställt oss på en fälla och minskar score
             # we found something
             player.score -= maybe_item.value
             print(f"⚠️ You entered a {maybe_item.name}, -{maybe_item.value} points. ⚠️")

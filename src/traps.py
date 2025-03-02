@@ -1,3 +1,6 @@
+import sys
+
+
 class Traps:
     """Representerar saker man kan plocka upp."""
     def __init__(self, name, value=10, symbol="."):
@@ -13,6 +16,12 @@ traps = [Traps("trap"), Traps("trap"), Traps("trap")]
 
 
 def randomize(grid):
+    """Placerar ut alla Traps i traps på random position"""
     for trap in traps:
-        x, y = grid.randomize_empty_position_in_grid()
-        grid.set(x, y, trap)
+        try:
+            x, y = grid.randomize_empty_position_in_grid()
+        except RuntimeError as e:
+            print(f"Critical error: {e}")
+            sys.exit(1)  # Lämnar programmet med en felkod
+        else:
+            grid.set(x, y, trap)
