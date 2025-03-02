@@ -77,8 +77,9 @@ def explode_bomb(boom, p, grid):
             if x_ok and y_ok and ending_not_at_position and not item_is_bomb: #Ta inte bort om det är ett ram vägg element, exit eller en annan bomb.
                 grid.clear(blow_pos_x, blow_pos_y)
             if (p.pos_x, p.pos_y) ==  (boom.pos_x + dx, boom.pos_y + dy):
-                print("Räkna ner")
                 score -= 50
+            if boom.original_item:
+                grid.set(boom.pos_x, boom.pos_y, boom.original_item)
     print(f"💥 Bomb exploded 💥 ({boom.pos_x}, {boom.pos_y})!")
 
 command = "a"
